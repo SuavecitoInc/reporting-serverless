@@ -1,0 +1,36 @@
+{
+  "name": "sales-reporting-serverless",
+  "version": "1.0.0",
+  "description": "Sales Reproting Serverless",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "sls offline -s dev",
+    "deploy": "sls deploy"
+  },
+  "author": "j-Riv <jose.alfredo.rivera@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.83",
+    "@types/isomorphic-fetch": "^0.0.35",
+    "@types/node": "16.11.64",
+    "@types/serverless": "^3.12.8",
+    "@typescript-eslint/eslint-plugin": "^5.40.1",
+    "@typescript-eslint/parser": "^5.40.1",
+    "aws-sdk": "^2.655.0",
+    "eslint": "^8.25.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "^2.7.1",
+    "serverless": "^3.23.0",
+    "serverless-offline": "^11.1.2",
+    "serverless-plugin-typescript": "^2.1.4",
+    "typescript": "^4.8.4"
+  },
+  "dependencies": {
+    "amazon-sp-api": "^0.7.10",
+    "isomorphic-fetch": "^3.0.0",
+    "oauth-1.0a": "^2.2.6"
+  }
+}

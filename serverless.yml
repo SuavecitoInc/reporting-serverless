@@ -1,0 +1,46 @@
+configValidationMode: error
+
+service: salesReporting
+
+useDotenv: true
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  stage: dev
+  region: us-west-1
+  #stackName: custom-stack-name # Use a custom name for the CloudFormation stack
+  #apiName: custom-api-name # Use a custom name for the API Gateway API
+  memorySize: 1024 # Overwrite the default memory size. Default is 1024
+  timeout: 30 # The default is 6 seconds. Note: API Gateway current maximum is 30 seconds
+  logRetentionInDays: 14 # Set the default RetentionInDays for a CloudWatch LogGroup
+  environment:
+    # amazon
+    sellingPartnerAppClientId: ${env:SELLING_PARTNER_APP_CLIENT_ID}
+    sellingPartnerAppClientSecret: ${env:SELLING_PARTNER_APP_CLIENT_SECRET}
+    awsAccessKeyId: ${env:AWS_ACCESS_KEY_ID}
+    awsSecretAccessKey: ${env:AWS_SECRET_ACCESS_KEY}
+    awsSellingPartnerRole: ${env:AWS_SELLING_PARTNER_ROLE}
+    refreshToken: ${env:REFRESH_TOKEN}
+    # netsuite
+    netsuiteAccountId: ${env:NETSUITE_ACCT_ID}
+    netsuiteConsumerKey: ${env:NETSUITE_CONSUMER_KEY}
+    netsuiteConsumerSecret: ${env:NETSUITE_CONSUMER_SECRET}
+    netsuiteAccessToken: ${env:NETSUITE_ACCESS_TOKEN}
+    netsuiteTokenSecret: ${env:NETSUITE_TOKEN_SECRET}
+    # restlets
+    netsuiteSaveAmazonJsonUrl: ${env:NETSUITE_SAVE_AMAZON_JSON_URL}
+
+# functions
+functions:
+  amazonCreateSellerSales:
+    handler: src/functions/amazonCreateSellerSales.handler
+    events: # The events that trigger this function
+      - schedule:
+          rate: rate(30 minutes)
+          enabled: true
+
+# Serverless plugins
+plugins:
+  - serverless-plugin-typescript
+  - serverless-offline
