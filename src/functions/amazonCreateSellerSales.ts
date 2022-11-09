@@ -7,11 +7,11 @@ import crypto from 'crypto';
 const userAgent = 'SalesReportingApi/1.0 (Language=JavaScript/ES6)';
 
 const credentials = {
-  SELLING_PARTNER_APP_CLIENT_ID: process.env.sellingPartnerAppClientId,
-  SELLING_PARTNER_APP_CLIENT_SECRET: process.env.sellingPartnerAppClientSecret,
-  AWS_ACCESS_KEY_ID: process.env.awsAccessKeyId,
-  AWS_SECRET_ACCESS_KEY: process.env.awsSecretAccessKey,
-  AWS_SELLING_PARTNER_ROLE: process.env.awsSellingPartnerRole,
+  SELLING_PARTNER_APP_CLIENT_ID: process.env.suaveSellingPartnerAppClientId,
+  SELLING_PARTNER_APP_CLIENT_SECRET: process.env.suaveSellingPartnerAppClientSecret,
+  AWS_ACCESS_KEY_ID: process.env.suaveAwsAccessKeyId,
+  AWS_SECRET_ACCESS_KEY: process.env.suaveAwsSecretAccessKey,
+  AWS_SELLING_PARTNER_ROLE: process.env.suaveAwsSellingPartnerRole,
 };
 
 // production credentials
@@ -170,7 +170,7 @@ export const handler: APIGatewayProxyHandler = async (
     // init
     const sellingPartner = new SellingPartnerAPI({
       region: 'na', // The region to use for the SP-API endpoints ("eu", "na" or "fe")
-      refresh_token: process.env.refreshToken, // The refresh token of your app user
+      refresh_token: process.env.suaveAwsRefreshToken, // The refresh token of your app user
       options: {
         auto_request_tokens: true,
         debug_log: true,

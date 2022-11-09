@@ -16,12 +16,12 @@ provider:
   logRetentionInDays: 14 # Set the default RetentionInDays for a CloudWatch LogGroup
   environment:
     # amazon
-    sellingPartnerAppClientId: ${env:SELLING_PARTNER_APP_CLIENT_ID}
-    sellingPartnerAppClientSecret: ${env:SELLING_PARTNER_APP_CLIENT_SECRET}
-    awsAccessKeyId: ${env:AWS_ACCESS_KEY_ID}
-    awsSecretAccessKey: ${env:AWS_SECRET_ACCESS_KEY}
-    awsSellingPartnerRole: ${env:AWS_SELLING_PARTNER_ROLE}
-    refreshToken: ${env:REFRESH_TOKEN}
+    suaveSellingPartnerAppClientId: ${env:SUAVE_SELLING_PARTNER_APP_CLIENT_ID}
+    suaveSellingPartnerAppClientSecret: ${env:SUAVE_SELLING_PARTNER_APP_CLIENT_SECRET}
+    suaveAwsAccessKeyId: ${env:SUAVE_AWS_ACCESS_KEY_ID}
+    suaveAwsSecretAccessKey: ${env:SUAVE_AWS_SECRET_ACCESS_KEY}
+    suaveAwsSellingPartnerRole: ${env:SUAVE_AWS_SELLING_PARTNER_ROLE}
+    suaveAwsRefreshToken: ${env:SUAVE_AWS_REFRESH_TOKEN}
     # netsuite
     netsuiteAccountId: ${env:NETSUITE_ACCT_ID}
     netsuiteConsumerKey: ${env:NETSUITE_CONSUMER_KEY}
