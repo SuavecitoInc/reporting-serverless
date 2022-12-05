@@ -92,7 +92,8 @@ const getDates = () => {
   const currentYear = date.getFullYear();
   const currentMonth = date.getMonth() + 1;
   const startYear = currentYear - 2;
-  let startMonth: string | number = currentMonth;
+  // start date should be - 2 years, + 1 month fromm current date
+  let startMonth: string | number = currentMonth + 1;
   startMonth = startMonth === 13 ? 1 : startMonth;
   // eslint-disable-next-line prefer-const, operator-linebreak
   startMonth = startMonth < 10 ? `0${startMonth}` : String(startMonth);
