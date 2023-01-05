@@ -98,7 +98,7 @@ const getDates = () => {
   // eslint-disable-next-line prefer-const, operator-linebreak
   startMonth = startMonth < 10 ? `0${startMonth}` : String(startMonth);
   let startDate = `${startYear}-${startMonth}-01T00:00:00`;
-  const endDate = `${currentYear}-${currentMonth}-01T00:00:00`;
+  const endDate = `${currentYear}-${currentMonth < 10 ? `0${currentMonth}` : currentMonth}-01T00:00:00`;
 
   if (getMonthDifference(startDate, endDate) > 24) {
     startDate = `${startYear + 1}-${startMonth}-01T00:00:00`;
