@@ -68,21 +68,32 @@ export const nsAuthenticatedFetch = async (url: string, method: string, body?: a
 
 const getDates = () => {
   // amazon report get 2 years
-  // start date should be - 2 years, + 1 month fromm current date
   const date = new Date();
   const currentYear = date.getFullYear();
   const currentMonth = date.getMonth() + 1;
   const startYear = currentYear - 2;
+  // start date should be - 2 years, + 1 month fromm current date
   let startMonth: string | number = currentMonth + 1;
   startMonth = startMonth === 13 ? 1 : startMonth;
   // eslint-disable-next-line prefer-const, operator-linebreak
   startMonth = startMonth < 10 ? `0${startMonth}` : String(startMonth);
-  const startDate = `${startYear}-${startMonth}-01T00:00:00`;
-  const endDate = `${currentYear}-${currentMonth}-01T00:00:00`;
+  let startDate = `${startYear}-${startMonth}-01T00:00:00`;
+  const endDate = `${currentYear}-${currentMonth < 10 ? `0${currentMonth}` : currentMonth}-01T00:00:00`;
+
+  if (getMonthDifference(startDate, endDate) > 24) {
+    startDate = `${startYear + 1}-${startMonth}-01T00:00:00`;
+  }
+
   return {
     start: startDate,
     end: endDate,
   };
+};
+
+const getMonthDifference = (start: string, end: string) => {
+  const startDate = new Date(start);
+  const endDate = new Date(end);
+  return endDate.getMonth() - startDate.getMonth() + 12 * (endDate.getFullYear() - startDate.getFullYear());
 };
 
 // create report
@@ -126,6 +137,8 @@ const getReport = async (sellingPartner: SellingPartnerAPI, reportId: string) =>
 
     attempts += 1;
 
+    console.log('REPORT RESPONSE STATUS', reportResponse.processingStatus);
+
     if (reportResponse.processingStatus === 'DONE') {
       console.log('REPORT DONE PROCESSING, DOWNLOADING...');
       const reportDocument = await sellingPartner.callAPI({
@@ -137,13 +150,13 @@ const getReport = async (sellingPartner: SellingPartnerAPI, reportId: string) =>
         },
       });
 
-      const report = await sellingPartner.download(reportDocument);
+      const reportContent = await sellingPartner.download(reportDocument);
 
-      return resolve(report);
+      return resolve({ status: reportResponse.processingStatus, content: reportContent });
     } else if (reportResponse.processingStatus === 'FATAL') {
-      return resolve(reportResponse.processingStatus);
+      return resolve({ status: reportResponse.processingStatus });
     } else if (reportResponse.processingStatus === 'CANCELLED') {
-      return resolve(reportResponse.processingStatus);
+      return resolve({ status: reportResponse.processingStatus });
     } else if (maxAttempts && attempts === maxAttempts) {
       return reject(new Error('Exceeded max attempts'));
     } else {
@@ -181,24 +194,33 @@ export const handler: APIGatewayProxyHandler = async (
 
     const reportId = await createReport(sellingPartner);
 
-    const report = await getReport(sellingPartner, reportId);
+    const report = (await getReport(sellingPartner, reportId)) as {
+      status: 'DONE' | 'CANCELLED' | 'FATAL';
+      content?: string;
+    };
     // do something with report
     const restletUrl = process.env.netsuiteSaveAmazonJsonUrl as string;
     const method = 'POST';
     const res = await nsAuthenticatedFetch(restletUrl, method, {
-      content: report,
+      status: report.status,
+      content: report?.content ? report.content : null,
       fileName: 'amazon_sales_traffic_report',
       fileType: 'JSON',
     });
+    if (report.status !== 'CANCELLED' && report.status !== 'FATAL') {
+      console.log(`Report (${reportId}) has been generated and saved in NetSuite...`, res);
 
-    console.log(`Report (${reportId}) has been generated and saved in NetSuite...`, res);
-
-    const response = {
-      statusCode: 200,
-      body: `Report (${reportId}) has been generated and saved in NetSuite...`,
-    };
-
-    return response;
+      return {
+        statusCode: 200,
+        body: `Report (${reportId}) has been generated and saved in NetSuite...`,
+      };
+    } else {
+      console.log('REPORT FAILED');
+      return {
+        statusCode: 200,
+        body: 'FAILED TO GET REPORT',
+      };
+    }
   } catch (err: any) {
     console.log('ERROR', err.message);
     return {
