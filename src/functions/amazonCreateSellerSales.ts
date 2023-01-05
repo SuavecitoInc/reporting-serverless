@@ -66,26 +66,6 @@ export const nsAuthenticatedFetch = async (url: string, method: string, body?: a
   }
 };
 
-// const getDates = () => {
-//   // amazon report get 2 years
-//   // start date should be - 2 years, + 1 month fromm current date
-//   const date = new Date();
-//   const currentYear = date.getFullYear();
-//   const currentMonth = date.getMonth() + 1;
-//   // const currentDay = date.getDate() > 9 ? date.getDate() : `0${date.getDate()}`;
-//   const startYear = currentYear - 2;
-//   let startMonth: string | number = currentMonth + 1;
-//   startMonth = startMonth === 13 ? 1 : startMonth;
-//   // eslint-disable-next-line prefer-const, operator-linebreak
-//   startMonth = startMonth < 10 ? `0${startMonth}` : String(startMonth);
-//   const startDate = `${startYear}-${startMonth}-01T00:00:00`;
-//   const endDate = `${currentYear}-${currentMonth}-01T00:00:00`;
-//   return {
-//     start: startDate,
-//     end: endDate,
-//   };
-// };
-
 const getDates = () => {
   // amazon report get 2 years
   const date = new Date();
@@ -241,29 +221,6 @@ export const handler: APIGatewayProxyHandler = async (
         body: 'FAILED TO GET REPORT',
       };
     }
-    // if (report.status !== 'CANCELLED' && report.status !== 'FATAL') {
-    //   // do something with report
-    //   const restletUrl = process.env.netsuiteSaveAmazonJsonUrl as string;
-    //   const method = 'POST';
-    //   const res = await nsAuthenticatedFetch(restletUrl, method, {
-    //     status: report.status,
-    //     content: report?.content ? report.content : null,
-    //     fileName: 'amazon_sales_traffic_report',
-    //     fileType: 'JSON',
-    //   });
-
-    //   console.log(`Report (${reportId}) has been generated and saved in NetSuite...`, res);
-
-    //   return {
-    //     statusCode: 200,
-    //     body: `Report (${reportId}) has been generated and saved in NetSuite...`,
-    //   };
-    // } else {
-    //   return {
-    //     statusCode: 200,
-    //     body: 'FAILED TO GET REPORT',
-    //   };
-    // }
   } catch (err: any) {
     console.log('ERROR', err.message);
     return {
